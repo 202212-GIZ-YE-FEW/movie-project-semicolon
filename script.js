@@ -6,6 +6,12 @@ const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780";
 const CONTAINER = document.querySelector(".movies-container");
 const singleMovieContainer = document.querySelector('.single-movie-container')
 const singleActorContainer = document.querySelector('.single-actor-container')
+const actorsContainer = document.querySelector('.actors-container')
+const actorsPageLink = document.getElementById("actorsPage");
+actorsPageLink.addEventListener('click', (e)=>{
+    e.preventDefault();
+    showActors();
+})
 
 // Don't touch this function please
 const autorun = async () => {
@@ -104,6 +110,48 @@ const renderMovie = (movie, credits) => {
     })
 };
 
+// Actors
+const showActors = async () => {
+    const actors = await fetchActors();
+    renderActors(actors.results)
+};
+
+const fetchActors = async () => {
+    const url = constructUrl('person/popular')
+    const res = await fetch(url)
+    return res.json();
+};
+
+
+const renderActors = (actors) => {
+    CONTAINER.innerHTML = ''
+    singleActorContainer.innerHTML = ''
+    actors.map((actor) => {
+        const actorDiv = document.createElement('div')
+        actorDiv.innerHTML =
+            `
+            <div class="card text-bg-dark" style="width: 300px"
+                onclick="fetchActorDetails(${actor.id})"
+            >
+              <img class="card-img" src="${BACKDROP_BASE_URL + actor.profile_path}" alt="${actor.name}" width="50">
+              <div class="card-img-overlay">
+                <h5 class="card-title">${actor.name}</h5>
+                <p class="card-text">${getGender(actor.gender)}</p>
+                <p class="card-text">Popularity<small>${actor.popularity}</small></p>
+              </div>
+            </div>
+    `;
+        actorDiv.addEventListener('click', (e)=>{
+            showActor(actor.id)
+        })
+
+        actorsContainer.appendChild(actorDiv)
+    });
+
+
+}
+
+
 
 const fetchActorDetails = async (actorID) => {
     const url = constructUrl('person/' + actorID)
@@ -115,7 +163,6 @@ const showActor = async (actor_id) => {
     const actor = await fetchActorDetails(actor_id);
     renderActor(actor)
 };
-
 
 const renderActor = (actor) => {
     const actorDiv = document.createElement('div')
