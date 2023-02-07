@@ -9,6 +9,9 @@ const singleActorContainer = document.querySelector('.single-actor-container')
 const actorsContainer = document.querySelector('.actors-container')
 const actorsPageLink = document.getElementById("actorsPage");
 const homePageLink = document.getElementById("home");
+const genresList = document.querySelector(".dropdown-menu.genres");
+
+
 actorsPageLink.addEventListener('click', (e)=>{
     e.preventDefault();
     showActors();
@@ -21,6 +24,7 @@ homePageLink.addEventListener('click', (e)=>{
 // Don't touch this function please
 const autorun = async () => {
     showMovies();
+    showGenres()
 };
 
 // Don't touch this function please
@@ -198,6 +202,41 @@ const renderActor = (actor) => {
     singleActorContainer.appendChild(actorDiv)
 }
 
+
+
+// Genres
+const fetchGenres = async () => {
+    const url = constructUrl('genre/movie/list')
+
+    const res = await fetch(url)
+    return res.json();
+};
+
+const showGenres = async () => {
+    const genres = await fetchGenres();
+    renderGenres(genres.genres)
+};
+
+const renderGenres = (genres) => {
+
+
+    for (const genre of genres) {
+        const item = document.createElement('a')
+        item.classList.add("dropdown-item")
+        item.setAttribute("href", "#")
+
+        item.textContent = genre.name;
+
+        genresList.appendChild(item)
+    }
+}
+
+
+
+
+
+
+
 function getGender(number) {
     switch (number) {
         case 1:
@@ -207,13 +246,10 @@ function getGender(number) {
     }
 }
 
-
-document.addEventListener("DOMContentLoaded", autorun);
-
 const checkbox = document.getElementById("checkbox")
 checkbox.addEventListener("change", () => {
     document.querySelector("body").dataset["bsTheme"] = checkbox.checked ? "dark" : "light"
 
 })
 
-const ACTORS_CONTAINER = document.querySelector(".actors.container");
+document.addEventListener("DOMContentLoaded", autorun);
