@@ -117,6 +117,25 @@ a.nav-link.active {
   align-items: center;
   box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
   -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+  z-index: 2;
+}
+#results{
+  position: absolute;
+  left: 0px;
+  transform: translateY(27px);
+  z-index: 1;
+  width: 100%;
+  background: #f0f3ff;
+  padding: 25px 0px 10px;
+  border-radius: 0px 0 20px 20px;
+}
+#results >div{
+  border-bottom: 1px solid #ccc;
+  padding: 10px 5px;
+  transition: .3s;
+}
+#results >div:hover{
+  background-color: rgba(204, 204, 204, 0.55);
 }
 
 #searchIcon {
