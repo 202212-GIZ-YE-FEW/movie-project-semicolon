@@ -3,7 +3,7 @@
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const PROFILE_BASE_URL = "http://image.tmdb.org/t/p/w185";
 const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780";
-const CONTAINER = document.querySelector(".container");
+const CONTAINER = document.querySelector(".movies-container");
 
 // Don't touch this function please
 const autorun = async () => {
@@ -44,37 +44,38 @@ const fetchMovieCredits = async (movieId) => {
     return res.json();
 };
 
-
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovies = (movies) => {
-    movies.map((movie) => {
-        const movieDiv = document.createElement("div");
-        movieDiv.innerHTML = `
-        <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
-            movie.title
-        } poster">
-        <h3>${movie.title}</h3>`;
-        movieDiv.addEventListener("click", () => {
-            movieDetails(movie);
-        });
-        CONTAINER.appendChild(movieDiv);
+  movies.map((movie) => {
+    const movieDiv = document.createElement("div");
+    movieDiv.classList.add("col");
+    movieDiv.style.cursor = "pointer";
+    movieDiv.innerHTML = `
+        <div class="card">
+            <img class="card-img-top" src=${PROFILE_BASE_URL + movie.poster_path} alt="${movie.title} poster">
+            <div class="card-body">
+            <h5 class="card-title text-danger">${movie.title}</h5>
+        </div>
+    `;
+    movieDiv.addEventListener("click", () => {
+      movieDetails(movie);
     });
+    CONTAINER.appendChild(movieDiv);
+  });
 };
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie, credits) => {
-    CONTAINER.innerHTML = `
+  CONTAINER.classList.toggle("row-cols-2");
+  CONTAINER.classList.toggle("row-cols-lg-3");
+  CONTAINER.innerHTML = `
     <div class="row">
         <div class="col-md-4">
-             <img id="movie-backdrop" src=${
-        BACKDROP_BASE_URL + movie.backdrop_path
-    }>
+            <img id="movie-backdrop" src=${BACKDROP_BASE_URL + movie.backdrop_path}>
         </div>
         <div class="col-md-8">
             <h2 id="movie-title">${movie.title}</h2>
-            <p id="movie-release-date"><b>Release Date:</b> ${
-        movie.release_date
-    }</p>
+            <p id="movie-release-date"><b>Release Date:</b> ${movie.release_date}</p>
             <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p>
             <h3>Overview:</h3>
             <p id="movie-overview">${movie.overview}</p>
@@ -144,6 +145,10 @@ function getGender(number) {
 
 document.addEventListener("DOMContentLoaded", autorun);
 
+const checkbox = document.getElementById("checkbox")
+checkbox.addEventListener("change", () => {
+  document.querySelector("body").dataset["bsTheme"] = checkbox.checked ? "dark" : "light"
+})
 
 const ACTORS_CONTAINER = document.querySelector(".actors.container");
 console.log(fetchMovies().results)
