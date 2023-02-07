@@ -23,15 +23,15 @@ homePageLink.addEventListener('click', (e)=>{
 
 // Don't touch this function please
 const autorun = async () => {
-    showMovies();
+    showMovies(`movie/now_playing`);
     showGenres()
 };
 
 // Don't touch this function please
-const constructUrl = (path) => {
+const constructUrl = (path, query="") => {
     return `${TMDB_BASE_URL}/${path}?api_key=${atob(
         "NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI="
-    )}`;
+    )}${query}`
 };
 
 // You may need to add to this function, definitely don't delete it.
@@ -43,15 +43,15 @@ const movieDetails = async (movie) => {
 
 
 
-const showMovies = async () => {
-    const movies = await fetchMovies();
+const showMovies = async (link, query) => {
+    const movies = await fetchMovies(link, query);
     renderMovies(movies.results);
 };
 
 
 // This function is to fetch movies. You may need to add it or change some part in it in order to apply some of the features.
-const fetchMovies = async () => {
-    const url = constructUrl(`movie/now_playing`);
+const fetchMovies = async (link, query ) => {
+    const url = constructUrl(link, query);
     const res = await fetch(url);
     return res.json();
 };
@@ -73,7 +73,7 @@ const renderMovies = (movies) => {
     actorsContainer.innerHTML = ""
     singleMovieContainer.innerHTML=""
     singleActorContainer.innerHTML = ""
-
+    CONTAINER.innerHTML = "";
     movies.map((movie) => {
         const movieDiv = document.createElement("div");
         movieDiv.classList.add("col");
@@ -207,7 +207,6 @@ const renderActor = (actor) => {
 // Genres
 const fetchGenres = async () => {
     const url = constructUrl('genre/movie/list')
-
     const res = await fetch(url)
     return res.json();
 };
@@ -218,14 +217,18 @@ const showGenres = async () => {
 };
 
 const renderGenres = (genres) => {
-
-
     for (const genre of genres) {
         const item = document.createElement('a')
         item.classList.add("dropdown-item")
         item.setAttribute("href", "#")
 
         item.textContent = genre.name;
+
+        item.addEventListener('click', function (e){
+            e.preventDefault();
+            showMovies('/discover/movie', "&with_genres="+genre.id)
+        //    /discover/movie?api_key={api_key}{genre_id}
+        })
 
         genresList.appendChild(item)
     }
