@@ -178,6 +178,7 @@ const renderActor = (actor) => {
     `
 
     CONTAINER.innerHTML = '';
+    actorsContainer.innerHTML = ""
     singleMovieContainer.innerHTML = ''
     singleActorContainer.appendChild(actorDiv)
 }
