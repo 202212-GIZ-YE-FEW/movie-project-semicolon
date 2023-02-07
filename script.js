@@ -4,6 +4,8 @@ const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const PROFILE_BASE_URL = "http://image.tmdb.org/t/p/w185";
 const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780";
 const CONTAINER = document.querySelector(".movies-container");
+const singleMovieContainer = document.querySelector('.single-movie-container')
+const singleActorContainer = document.querySelector('.single-actor-container')
 
 // Don't touch this function please
 const autorun = async () => {
@@ -67,7 +69,6 @@ const renderMovies = (movies) => {
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie, credits) => {
     CONTAINER.innerHTML = '';
-    const singleMovieContainer = document.querySelector('.single-movie-container')
     singleMovieContainer.innerHTML = `
         <div class="col-md-4">
             <img id="movie-backdrop" src=${BACKDROP_BASE_URL + movie.backdrop_path}>
@@ -109,6 +110,7 @@ const fetchActorDetails = async (actorID) => {
     const res = await fetch(url)
     return res.json();
 };
+
 const showActor = async (actor_id) => {
     const actor = await fetchActorDetails(actor_id);
     renderActor(actor)
@@ -129,7 +131,8 @@ const renderActor = (actor) => {
     `
 
     CONTAINER.innerHTML = '';
-    CONTAINER.appendChild(actorDiv)
+    singleMovieContainer.innerHTML = ''
+    singleActorContainer.appendChild(actorDiv)
 }
 
 function getGender(number) {
