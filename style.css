@@ -106,3 +106,40 @@ a.nav-link.active {
   .checkbox:checked + .checkbox-label .ball {
     transform: translateX(24px);
   }
+
+
+
+#searchBox {
+  border-radius: 55px;
+  padding: 10px;
+  background: #f0f3ff;
+  display: flex;
+  align-items: center;
+  box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+  -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+}
+
+#searchIcon {
+  width: 30px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+
+input {
+  font-size: 20px;
+  width: 0px;
+  border: 0;
+  background: transparent;
+  outline: none;
+  transition: 1s;
+}
+
+.active input {
+  width: 300px;
+  /*padding: 12px 20px;*/
+}
+
+.active .mic-icon {
+  width: 30px;
+}
