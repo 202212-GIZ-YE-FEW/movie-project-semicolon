@@ -8,15 +8,19 @@ const singleMovieContainer = document.querySelector('.single-movie-container')
 const singleActorContainer = document.querySelector('.single-actor-container')
 const actorsContainer = document.querySelector('.actors-container')
 const actorsPageLink = document.getElementById("actorsPage");
+const homePageLink = document.getElementById("home");
 actorsPageLink.addEventListener('click', (e)=>{
     e.preventDefault();
     showActors();
 })
+homePageLink.addEventListener('click', (e)=>{
+    e.preventDefault();
+    showMovies()
+})
 
 // Don't touch this function please
 const autorun = async () => {
-    const movies = await fetchMovies();
-    renderMovies(movies.results);
+    showMovies();
 };
 
 // Don't touch this function please
@@ -32,6 +36,14 @@ const movieDetails = async (movie) => {
     const credits = await fetchMovieCredits(movie.id)
     renderMovie(movieRes, credits.cast);
 };
+
+
+
+const showMovies = async () => {
+    const movies = await fetchMovies();
+    renderMovies(movies.results);
+};
+
 
 // This function is to fetch movies. You may need to add it or change some part in it in order to apply some of the features.
 const fetchMovies = async () => {
@@ -54,6 +66,10 @@ const fetchMovieCredits = async (movieId) => {
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovies = (movies) => {
+    actorsContainer.innerHTML = ""
+    singleMovieContainer.innerHTML=""
+    singleActorContainer.innerHTML = ""
+
     movies.map((movie) => {
         const movieDiv = document.createElement("div");
         movieDiv.classList.add("col");
@@ -150,7 +166,6 @@ const renderActors = (actors) => {
 
 
 }
-
 
 
 const fetchActorDetails = async (actorID) => {
