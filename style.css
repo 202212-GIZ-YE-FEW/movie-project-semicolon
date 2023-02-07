@@ -8,7 +8,9 @@
   margin: 0;
   padding: 0;
 }
-
+body[data-bs-theme="light"] :is(.nav-link, .navbar-brand){
+  color: darkgrey;
+}
 #movie-backdrop {
   width: 100%;
 }

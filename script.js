@@ -46,30 +46,29 @@ const fetchMovieCredits = async (movieId) => {
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovies = (movies) => {
-  movies.map((movie) => {
-    const movieDiv = document.createElement("div");
-    movieDiv.classList.add("col");
-    movieDiv.style.cursor = "pointer";
-    movieDiv.innerHTML = `
+    movies.map((movie) => {
+        const movieDiv = document.createElement("div");
+        movieDiv.classList.add("col");
+        movieDiv.style.cursor = "pointer";
+        movieDiv.innerHTML = `
         <div class="card">
             <img class="card-img-top" src=${PROFILE_BASE_URL + movie.poster_path} alt="${movie.title} poster">
             <div class="card-body">
             <h5 class="card-title text-danger">${movie.title}</h5>
         </div>
     `;
-    movieDiv.addEventListener("click", () => {
-      movieDetails(movie);
+        movieDiv.addEventListener("click", () => {
+            movieDetails(movie);
+        });
+        CONTAINER.appendChild(movieDiv);
     });
-    CONTAINER.appendChild(movieDiv);
-  });
 };
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie, credits) => {
-  CONTAINER.classList.toggle("row-cols-2");
-  CONTAINER.classList.toggle("row-cols-lg-3");
-  CONTAINER.innerHTML = `
-    <div class="row">
+    CONTAINER.innerHTML = '';
+    const singleMovieContainer = document.querySelector('.single-movie-container')
+    singleMovieContainer.innerHTML = `
         <div class="col-md-4">
             <img id="movie-backdrop" src=${BACKDROP_BASE_URL + movie.backdrop_path}>
         </div>
@@ -80,14 +79,16 @@ const renderMovie = (movie, credits) => {
             <h3>Overview:</h3>
             <p id="movie-overview">${movie.overview}</p>
         </div>
-        </div>
-            <h3>Actors:</h3>
+        <div class="row">
+        <div class="col-12">
+                    <h3>Actors:</h3>
             <ul id="actors" class="list-unstyled"></ul>
-    </div>`;
+        </div>
+</div>
+`;
 
-    const actorsList = CONTAINER.querySelector("#actors");
-    console.log(credits)
-    credits.forEach((credit)=>{
+    const actorsList = singleMovieContainer.querySelector("#actors");
+    credits.forEach((credit) => {
         const actor = document.createElement('li')
         actor.innerHTML = `
          <img id="movie-backdrop" src=${
@@ -95,7 +96,7 @@ const renderMovie = (movie, credits) => {
         } alt="">
          <span>${credit.name}</span>
         `
-        actor.addEventListener('click', (e)=>{
+        actor.addEventListener('click', (e) => {
             showActor(credit.id)
         })
         actorsList.appendChild(actor)
@@ -103,9 +104,8 @@ const renderMovie = (movie, credits) => {
 };
 
 
-
 const fetchActorDetails = async (actorID) => {
-    const url = constructUrl('person/'+actorID)
+    const url = constructUrl('person/' + actorID)
     const res = await fetch(url)
     return res.json();
 };
@@ -115,7 +115,7 @@ const showActor = async (actor_id) => {
 };
 
 
-const renderActor = (actor)=>{
+const renderActor = (actor) => {
     const actorDiv = document.createElement('div')
     actorDiv.innerHTML = `
             <div class="card text-bg-dark" style="width: 500px">
@@ -131,6 +131,7 @@ const renderActor = (actor)=>{
     CONTAINER.innerHTML = '';
     CONTAINER.appendChild(actorDiv)
 }
+
 function getGender(number) {
     switch (number) {
         case 1:
@@ -141,14 +142,12 @@ function getGender(number) {
 }
 
 
-
-
 document.addEventListener("DOMContentLoaded", autorun);
 
 const checkbox = document.getElementById("checkbox")
 checkbox.addEventListener("change", () => {
-  document.querySelector("body").dataset["bsTheme"] = checkbox.checked ? "dark" : "light"
+    document.querySelector("body").dataset["bsTheme"] = checkbox.checked ? "dark" : "light"
+
 })
 
 const ACTORS_CONTAINER = document.querySelector(".actors.container");
-console.log(fetchMovies().results)
