@@ -285,7 +285,7 @@ function getGender(number) {
 
 const checkbox = document.getElementById("checkbox")
 checkbox.addEventListener("change", () => {
-    document.querySelector("body").dataset["bsTheme"] = checkbox.checked ? "dark" : "light"
+    document.querySelector("body").dataset["bsTheme"] = checkbox.checked ? "light" : "dark"
 
 })
 
