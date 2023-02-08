@@ -11,6 +11,7 @@ const actorsPageLink = document.getElementById("actorsPage");
 const homePageLink = document.getElementById("home");
 const genresList = document.querySelector(".dropdown-menu.genres");
 const searchBar = document.getElementById("searchBar");
+const searchResults = document.getElementById("results")
 
 
 actorsPageLink.addEventListener('click', (e) => {
@@ -237,8 +238,6 @@ const renderGenres = (genres) => {
 
 // search/movie   &query=[MOVIE_TITLE]
 searchBar.addEventListener("input", async function (e) {
-    const searchResults = document.getElementById("results")
-
     const url = constructUrl('search/movie', '&query=' + searchBar.value)
     if (searchBar.value !== ""){
         searchResults.style.display = "initial"
@@ -295,6 +294,8 @@ const searchBox = document.getElementById('searchBox'),
 
 searchIcon.onclick = function () {
     searchBox.classList.toggle('active');
+    searchResults.classList.toggle("d-none")
+
 };
 
 
