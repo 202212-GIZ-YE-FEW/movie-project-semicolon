@@ -10,13 +10,14 @@ const actorsContainer = document.querySelector('.actors-container')
 const actorsPageLink = document.getElementById("actorsPage");
 const homePageLink = document.getElementById("home");
 const genresList = document.querySelector(".dropdown-menu.genres");
+const searchBar = document.getElementById("searchBar");
 
 
-actorsPageLink.addEventListener('click', (e)=>{
+actorsPageLink.addEventListener('click', (e) => {
     e.preventDefault();
     showActors();
 })
-homePageLink.addEventListener('click', (e)=>{
+homePageLink.addEventListener('click', (e) => {
     e.preventDefault();
     showMovies()
 })
@@ -28,7 +29,7 @@ const autorun = async () => {
 };
 
 // Don't touch this function please
-const constructUrl = (path, query="") => {
+const constructUrl = (path, query = "") => {
     return `${TMDB_BASE_URL}/${path}?api_key=${atob(
         "NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI="
     )}${query}`
@@ -42,7 +43,6 @@ const movieDetails = async (movie) => {
 };
 
 
-
 const showMovies = async (link, query) => {
     const movies = await fetchMovies(link, query);
     renderMovies(movies.results);
@@ -50,7 +50,7 @@ const showMovies = async (link, query) => {
 
 
 // This function is to fetch movies. You may need to add it or change some part in it in order to apply some of the features.
-const fetchMovies = async (link, query ) => {
+const fetchMovies = async (link, query) => {
     const url = constructUrl(link, query);
     const res = await fetch(url);
     return res.json();
@@ -71,7 +71,7 @@ const fetchMovieCredits = async (movieId) => {
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovies = (movies) => {
     actorsContainer.innerHTML = ""
-    singleMovieContainer.innerHTML=""
+    singleMovieContainer.innerHTML = ""
     singleActorContainer.innerHTML = ""
     CONTAINER.innerHTML = "";
     movies.map((movie) => {
@@ -161,7 +161,7 @@ const renderActors = (actors) => {
               </div>
             </div>
     `;
-        actorDiv.addEventListener('click', (e)=>{
+        actorDiv.addEventListener('click', (e) => {
             showActor(actor.id)
         })
 
@@ -203,7 +203,6 @@ const renderActor = (actor) => {
 }
 
 
-
 // Genres
 const fetchGenres = async () => {
     const url = constructUrl('genre/movie/list')
@@ -224,10 +223,9 @@ const renderGenres = (genres) => {
 
         item.textContent = genre.name;
 
-        item.addEventListener('click', function (e){
+        item.addEventListener('click', function (e) {
             e.preventDefault();
-            showMovies('/discover/movie', "&with_genres="+genre.id)
-        //    /discover/movie?api_key={api_key}{genre_id}
+            showMovies('/discover/movie', "&with_genres=" + genre.id)
         })
 
         genresList.appendChild(item)
@@ -235,9 +233,42 @@ const renderGenres = (genres) => {
 }
 
 
+// search movies
 
+// search/movie   &query=[MOVIE_TITLE]
+searchBar.addEventListener("input", async function (e) {
+    const searchResults = document.getElementById("results")
 
+    const url = constructUrl('search/movie', '&query=' + searchBar.value)
+    if (searchBar.value !== ""){
+        searchResults.style.display = "initial"
+        let res = await fetch(url)
+        res = await res.json();
+        res = res.results;
 
+        while (searchResults.firstChild) {
+            searchResults.removeChild(searchResults.firstChild);
+        }
+
+        if(res.length > 0){
+            for (const result of res) {
+                const div = document.createElement("div");
+                div.classList.add("d-flex");
+                div.textContent = result.title;
+                searchResults.appendChild(div)
+            }
+        }else{
+            const div = document.createElement("div");
+            div.classList.add("d-flex");
+            div.textContent = "no movie found for "+searchBar.value;
+            searchResults.appendChild(div)
+        }
+
+    }else{
+        searchResults.style.display = "none"
+    }
+
+})
 
 
 function getGender(number) {

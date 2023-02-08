@@ -120,6 +120,7 @@ a.nav-link.active {
   z-index: 2;
 }
 #results{
+  display: none;
   position: absolute;
   left: 0px;
   transform: translateY(27px);
