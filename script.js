@@ -20,7 +20,7 @@ actorsPageLink.addEventListener('click', (e) => {
 })
 homePageLink.addEventListener('click', (e) => {
     e.preventDefault();
-    showMovies()
+    showMovies(`movie/now_playing`)
 })
 
 // Don't touch this function please
@@ -76,21 +76,27 @@ const renderMovies = (movies) => {
     singleMovieContainer.innerHTML = ""
     singleActorContainer.innerHTML = ""
     CONTAINER.innerHTML = "";
+
     movies.map((movie) => {
         const movieDiv = document.createElement("div");
-        movieDiv.classList.add("col");
-        movieDiv.style.cursor = "pointer";
-        movieDiv.innerHTML = `
-        <div class="card">
-            <img class="card-img-top" src=${PROFILE_BASE_URL + movie.poster_path} alt="${movie.title} poster">
-            <div class="card-body">
-                <div class="d-flex justify-content-between gap-3">
-                    <h6 class="card-title font-bold">${movie.title}</h6>
-                    <p class="text-danger">${movie.release_date.slice(0,4)}</p>
-                </div>
+        movieDiv.innerHTML = `        
+        <div class="movie-card card bg-dark text-white">
+         
+          <img class="card-img" src=${PROFILE_BASE_URL + movie.poster_path} alt="${movie.title} poster">
+
+          <div class="card-img-overlay">
+            <div class="overlay-data">
+                <h6 class="card-title font-bold">${movie.title}</h6>
+                <p class="d-flex justify-content-between gap-3 w-50">
+                    <span class="rating">⭐ ${movie.vote_average}</span>
+                    <span class="release-date">${movie.release_date.slice(0, 4)}</span>
+                </p>
+                <p>${movie.overview}</p>
             </div>
+          </div>
         </div>
     `;
+
         movieDiv.addEventListener("click", () => {
             movieDetails(movie);
         });
@@ -113,8 +119,6 @@ const renderMovie = (movie, credits) => {
     div.appendChild(genres)
 
 
-
-    console.log(movie)
     CONTAINER.innerHTML = '';
     singleMovieContainer.innerHTML = `
        <div class="col-12 single-movie-hero" style="">
