@@ -47,6 +47,7 @@ const movieDetails = async (movie) => {
 const showMovies = async (link, query) => {
     const movies = await fetchMovies(link, query);
     renderMovies(movies.results);
+    console.log(movies.results)
 };
 
 
@@ -83,7 +84,11 @@ const renderMovies = (movies) => {
         <div class="card">
             <img class="card-img-top" src=${PROFILE_BASE_URL + movie.poster_path} alt="${movie.title} poster">
             <div class="card-body">
-            <h5 class="card-title text-danger">${movie.title}</h5>
+                <div class="d-flex justify-content-between gap-3">
+                    <h6 class="card-title font-bold">${movie.title}</h6>
+                    <p class="text-danger">${movie.release_date.slice(0,4)}</p>
+                </div>
+            </div>
         </div>
     `;
         movieDiv.addEventListener("click", () => {
@@ -95,40 +100,57 @@ const renderMovies = (movies) => {
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie, credits) => {
+
+    const genres = document.createElement("div");
+    genres.setAttribute("id", "movie-genres")
+    const div = document.createElement("div");
+
+    for (const genre of movie.genres) {
+        const span = document.createElement('span')
+        span.textContent = genre.name;
+        genres.appendChild(span)
+    }
+    div.appendChild(genres)
+
+
+
+    console.log(movie)
     CONTAINER.innerHTML = '';
     singleMovieContainer.innerHTML = `
-        <div class="col-md-4">
-            <img id="movie-backdrop" src=${BACKDROP_BASE_URL + movie.backdrop_path}>
-        </div>
-        <div class="col-md-8">
-            <h2 id="movie-title">${movie.title}</h2>
-            <p id="movie-release-date"><b>Release Date:</b> ${movie.release_date}</p>
-            <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p>
-            <h3>Overview:</h3>
-            <p id="movie-overview">${movie.overview}</p>
-        </div>
-        <div class="row">
-        <div class="col-12">
-                    <h3>Actors:</h3>
-            <ul id="actors" class="list-unstyled"></ul>
-        </div>
-</div>
+       <div class="col-12 single-movie-hero" style="">
+            <img id="movie-backdrop" src=${PROFILE_BASE_URL + movie.backdrop_path} alt="${movie.title} poster">
+            <div class="single-movie-hero-text">
+                <h4 id="movie-title"><strong>${movie.title}</strong></h4>
+                <h6 id="movie-release-date">Release Date : <small>${movie.release_date}</small></h6>
+                <p id="movie-runtime"><b> <i class="fas fa-clock"></i> </b> ${movie.runtime} minutes</p>    
+                ${div.innerHTML}
+            </div>
+       </div>
+        
+        <h3 class="mt-4 text-primary">${movie.title}</h3>
+        <p id="movie-overview">
+            ${movie.overview}
+        </p>
+        <h4 class="text-primary mt-4">Movie Cast</h4>
+        <ul id="actors"></ul>
+
 `;
 
     const actorsList = singleMovieContainer.querySelector("#actors");
+
     credits.forEach((credit) => {
         const actor = document.createElement('li')
         actor.innerHTML = `
-         <img id="movie-backdrop" src=${
-            BACKDROP_BASE_URL + credit.profile_path
-        } alt="">
-         <span>${credit.name}</span>
+         <img id="movie-backdrop" src=${BACKDROP_BASE_URL + credit.profile_path} alt="">
+         <span class="font-sm">${credit.name}</span>
         `
         actor.addEventListener('click', (e) => {
             showActor(credit.id)
         })
         actorsList.appendChild(actor)
     })
+
+
 };
 
 // Actors
