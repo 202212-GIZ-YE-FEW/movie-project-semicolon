@@ -252,9 +252,13 @@ searchBar.addEventListener("input", async function (e) {
 
         if(res.length > 0){
             for (const result of res) {
-                const div = document.createElement("div");
+                const div = document.createElement("a");
                 div.classList.add("d-flex");
                 div.textContent = result.title;
+                div.addEventListener("click", function (e){
+                    e.preventDefault();
+                    movieDetails(result);
+                })
                 searchResults.appendChild(div)
             }
         }else{

@@ -130,10 +130,12 @@ a.nav-link.active {
   padding: 25px 0px 10px;
   border-radius: 0px 0 20px 20px;
 }
-#results >div{
+#results >a{
   border-bottom: 1px solid #ccc;
   padding: 10px 5px;
   transition: .3s;
+  cursor: pointer;
+  text-decoration: none;
 }
 #results >div:hover{
   background-color: rgba(204, 204, 204, 0.55);
