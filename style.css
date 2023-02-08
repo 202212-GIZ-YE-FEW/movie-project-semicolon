@@ -12,6 +12,9 @@
 body[data-bs-theme="light"] :is(.nav-link, .navbar-brand){
   color: darkgrey;
 }
+.nav-link {
+  text-align: center;
+}
 #movie-backdrop {
   width: 100%;
 }
