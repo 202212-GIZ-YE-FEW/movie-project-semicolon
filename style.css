@@ -1,47 +1,87 @@
 /* global styling */
 :root {
   --main-color: #ff0000;
+  --secondary-color: #f1c40f;
 }
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+ul {
+  list-style: none;
+}
+a {
+  transition: all 0.4s ease;
+  text-decoration: none;
+}
+img{
+  max-width: 100%;
+}
+
+a:hover {
+  color: var(--secondary-color) !important
+}
+
+
+.text-primary{
+  color: var(--main-color) !important;
+}
+
 
 body[data-bs-theme="light"] :is(.nav-link, .navbar-brand){
   color: darkgrey;
+}
+.nav-link {
+  text-align: center;
 }
 #movie-backdrop {
   width: 100%;
 }
 
 
-
+/* Actors Style */
 #actors {
-    margin: 0px 16px 0 0;
+    margin: 0 16px 0 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 20px;
 }
 #actors li{
-    border-radius: 5px;
-    overflow: hidden;
+  cursor: pointer;
 }
-#actors li span{
-  font-size: 12px;
+#actors li span, .director, .companies{
+  font-size: 1.2rem;
+  color: white;
+  margin-top: 6px;
+  display: block;
+  cursor: pointer;
 }
-a {
-  transition: all 0.4s ease;
+.companies{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 40px;
+  padding-top: 10px;
+}
+.companies img{
+  display: block;
+  margin: auto;
+}
+.companies li{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: initial;
 }
 
-a:hover {
-  color: var(--main-color) !important;
+.director{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.text-primary{
-  color: var(--main-color) !important;
-}
 
 /* start of header */
 .dropdown__menu {
@@ -93,7 +133,7 @@ a.nav-link.active {
   align-items: center;
 }
 
-.fa-moon {color: #f1c40f;}
+.fa-moon {color: var(--secondary-color);}
 
 .fa-sun {color: #f39c12;}
 
@@ -127,20 +167,19 @@ a.nav-link.active {
 #results{
   display: none;
   position: absolute;
-  left: 0px;
+  left: 0;
   transform: translateY(27px);
   z-index: 1;
   width: 100%;
   background: #f0f3ff;
-  padding: 25px 0px 10px;
-  border-radius: 0px 0 20px 20px;
+  padding: 25px 0 10px;
+  border-radius: 0 0 20px 20px;
 }
 #results >a{
   border-bottom: 1px solid #ccc;
   padding: 10px 5px;
   transition: .3s;
   cursor: pointer;
-  text-decoration: none;
 }
 #results >div:hover{
   background-color: rgba(204, 204, 204, 0.55);
@@ -155,7 +194,7 @@ a.nav-link.active {
 
 input {
   font-size: 20px;
-  width: 0px;
+  width: 0;
   border: 0;
   background: transparent;
   outline: none;
@@ -164,7 +203,6 @@ input {
 
 .active input {
   width: 300px;
-  /*padding: 12px 20px;*/
 }
 
 .active .mic-icon {
@@ -206,7 +244,51 @@ input {
 #movie-runtime{
   margin-bottom: 5px;
 }
+#playTrailer{
+  position: absolute;
+  right: 5%;
+  bottom: 9%;
+  padding: 10px 16px;
+  border-radius: 50%;
+  background-color: #fcd53f;
+  z-index: 1;
+  box-shadow: 0 0 5px 1px #fff;
+  color: white;
+  transition: .1s;
+}
+#playTrailer i{
+  transition: .1s;
+}
+#playTrailer:hover i{
+  transform: scale(1.5);
+}
+#playTrailer:hover{
+  transform: scale(1.1);
+  background-color: rgba(252, 213, 63, 0.83);
+}
 
+.hideTrailer{
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  z-index: 1;
+  left: 5px;
+  top: 5px;
+  border-radius: 50%;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fcd53f;
+  box-shadow: 0 0 5px 1px #fff;
+}
+.modal-body{
+  padding: 0;
+}
+.modal-body iframe{
+  width: 100%;
+  aspect-ratio: 16/9;
+}
 
 
 /* Movie card style */
