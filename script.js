@@ -37,17 +37,43 @@ const constructUrl = (path, query = "") => {
 };
 
 // You may need to add to this function, definitely don't delete it.
-const movieDetails = async (movie) => {
+const fetchMovieDetails = async (movie) => {
     const movieRes = await fetchMovie(movie.id);
     const credits = await fetchMovieCredits(movie.id)
-    renderMovie(movieRes, credits.cast);
+    const director = credits.crew.find(member => member.job === 'Director')
+    let trailer = await fetchTrailer(movie.id);
+    const RelatedMovies = await fetchRelatedMovies(movie.id);
+    const productionCompanies = movieRes.production_companies
+    trailer = trailer.results;
+    const trailerLink = {
+        link:
+            trailer.length > 0
+                ? `http://youtube.com/embed/${trailer[0].key}`
+                : 'noVideoImg',
+    };
+
+    renderMovie(movieRes, credits.cast.slice(0,5), director, trailerLink.link, RelatedMovies.results, productionCompanies);
 };
+
+/****************  Trailer ************** */
+const fetchTrailer = async (movie_id) => {
+    const url = constructUrl(`movie/${movie_id}/videos`);
+    const res = await fetch(url);
+    return res.json();
+};
+
+/****************  related movies ************** */
+const fetchRelatedMovies = async (movie_id) => {
+    const url = constructUrl(`movie/${movie_id}/similar`);
+    const res = await fetch(url);
+    return res.json();
+};
+
 
 
 const showMovies = async (link, query) => {
     const movies = await fetchMovies(link, query);
     renderMovies(movies.results);
-    console.log(movies.results)
 };
 
 
@@ -91,43 +117,51 @@ const renderMovies = (movies) => {
                     <span class="rating">⭐ ${movie.vote_average}</span>
                     <span class="release-date">${movie.release_date.slice(0, 4)}</span>
                 </p>
-                <p>${movie.overview}</p>
+                <p>${cutString(movie.overview)}</p>
             </div>
           </div>
         </div>
     `;
 
         movieDiv.addEventListener("click", () => {
-            movieDetails(movie);
+            fetchMovieDetails(movie);
         });
         CONTAINER.appendChild(movieDiv);
     });
 };
 
 // You'll need to play with this function in order to add features and enhance the style.
-const renderMovie = (movie, credits) => {
-
-    const genres = document.createElement("div");
-    genres.setAttribute("id", "movie-genres")
-    const div = document.createElement("div");
-
-    for (const genre of movie.genres) {
-        const span = document.createElement('span')
-        span.textContent = genre.name;
-        genres.appendChild(span)
-    }
-    div.appendChild(genres)
+const renderMovie = (movie, credits, director, trailerLink, relatedMovies, productionCompanies) => {
+    // const genres = document.createElement("div");
+    // genres.setAttribute("id", "movie-genres")
+    // const div = document.createElement("div");
+    // for (const genre of movie.genres) {
+    //     const span = document.createElement('span')
+    //     span.textContent = genre.name;
+    //     genres.appendChild(span)
+    // }
+    // div.appendChild(genres)
 
 
+    console.log(productionCompanies)
     CONTAINER.innerHTML = '';
     singleMovieContainer.innerHTML = `
        <div class="col-12 single-movie-hero" style="">
             <img id="movie-backdrop" src=${PROFILE_BASE_URL + movie.backdrop_path} alt="${movie.title} poster">
+            
+            <button id="playTrailer" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fas fa-play"></i>
+            </button>
             <div class="single-movie-hero-text">
                 <h4 id="movie-title"><strong>${movie.title}</strong></h4>
-                <h6 id="movie-release-date">Release Date : <small>${movie.release_date}</small></h6>
-                <p id="movie-runtime"><b> <i class="fas fa-clock"></i> </b> ${movie.runtime} minutes</p>    
-                ${div.innerHTML}
+                <div class="d-flex justify-content-between gap-3 ">
+                    <h6> <span class="fa fa-language"></span> <small>${movie.original_language}</small></h6>
+                    <p id="movie-runtime"><b> <i class="fas fa-clock"></i> </b> ${movie.runtime} minutes</p>
+                </div>
+                <p class="d-flex justify-content-between gap-3 ">
+                    <span class="rating">⭐ ${movie.vote_average}</span>
+                    <span class="release-date">${movie.vote_count} <span class="text-white">votes</span></span>
+                </p>    
             </div>
        </div>
         
@@ -135,24 +169,111 @@ const renderMovie = (movie, credits) => {
         <p id="movie-overview">
             ${movie.overview}
         </p>
-        <h4 class="text-primary mt-4">Movie Cast</h4>
+        <h4 class="text-primary mt-5">Movie Cast</h4>
         <ul id="actors"></ul>
 
 `;
 
     const actorsList = singleMovieContainer.querySelector("#actors");
-
     credits.forEach((credit) => {
         const actor = document.createElement('li')
         actor.innerHTML = `
-         <img id="movie-backdrop" src=${BACKDROP_BASE_URL + credit.profile_path} alt="">
-         <span class="font-sm">${credit.name}</span>
+             <img id="movie-backdrop" src=${BACKDROP_BASE_URL + credit.profile_path} alt="">
+             <span class="font-sm">${credit.name}</span>
         `
         actor.addEventListener('click', (e) => {
             showActor(credit.id)
         })
         actorsList.appendChild(actor)
     })
+
+    const directorSection = document.createElement('div');
+    directorSection.innerHTML = `
+             <h3 class="mt-5 text-primary">Director</h3>
+             <div class="director">
+                 <img width="20%" src=${BACKDROP_BASE_URL + director.profile_path} alt="">
+                 <span class="font-sm">${director.name}</span>
+            </div>
+        `
+    directorSection.addEventListener('click', (e) => {
+        showActor(director.id)
+    })
+    singleMovieContainer.appendChild(directorSection)
+
+
+    const companiesSection = document.createElement("div");
+    companiesSection.innerHTML  = `<h3 class="mt-5 text-primary">Production Companies</h3>`
+    const ul = document.createElement("ul");
+
+
+    ul.classList.add('companies')
+    productionCompanies.forEach((company) => {
+        const li = document.createElement('li')
+        li.innerHTML = `
+             <img src=${BACKDROP_BASE_URL + company.logo_path} alt="">
+             <span class="font-sm">${company.name}</span>
+        `
+        ul.appendChild(li)
+    })
+    companiesSection.appendChild(ul)
+    singleMovieContainer.appendChild(companiesSection)
+
+
+
+    const relatedMoviesSection = document.createElement('div');
+    relatedMoviesSection.classList.add('row')
+    relatedMoviesSection.style.rowGap = "10px"
+    relatedMoviesSection.innerHTML = `<h3 class="mt-5 text-primary">Related Movies</h3>`
+    relatedMovies.map((movie) => {
+        const movieDiv = document.createElement("div");
+        movieDiv.classList.add('col-12')
+        movieDiv.classList.add('col-md-6')
+        movieDiv.classList.add('col-lg-4')
+        movieDiv.innerHTML = `        
+        
+        <div class="movie-card card text-white">
+         
+          <img class="card-img" src=${PROFILE_BASE_URL + movie.poster_path} alt="${movie.title} poster">
+
+          <div class="card-img-overlay">
+            <div class="overlay-data">
+                <h6 class="card-title font-bold">${movie.title}</h6>
+                <p class="d-flex justify-content-between gap-3 w-50">
+                    <span class="rating">⭐ ${movie.vote_average}</span>
+                    <span class="release-date">${movie.release_date.slice(0, 4)}</span>
+                </p>
+                <p>${cutString(movie.overview)}</p>
+            </div>
+          </div>
+        </div>  
+    `;
+
+        movieDiv.addEventListener("click", () => {
+            fetchMovieDetails(movie);
+        });
+        relatedMoviesSection.appendChild(movieDiv)
+    });
+    singleMovieContainer.appendChild(relatedMoviesSection)
+
+
+    let modal = document.createElement('div')
+    modal.innerHTML = `
+     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <button type="button" class="hideTrailer btn" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+              
+              <div class="modal-body">
+                <iframe src="${trailerLink}?autoplay=1&mute=1" title="YouTube video player"
+            allow="autoplay" allowFullScreen> allow=”autoplay”</iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+    `
+    document.body.appendChild(modal)
 
 
 };
@@ -173,6 +294,7 @@ const fetchActors = async () => {
 const renderActors = (actors) => {
     CONTAINER.innerHTML = ''
     singleActorContainer.innerHTML = ''
+    singleMovieContainer.innerHTML = ''
     actors.map((actor) => {
         const actorDiv = document.createElement('div')
         actorDiv.innerHTML =
@@ -282,7 +404,7 @@ searchBar.addEventListener("input", async function (e) {
                 div.textContent = result.title;
                 div.addEventListener("click", function (e){
                     e.preventDefault();
-                    movieDetails(result);
+                    fetchMovieDetails(result);
                 })
                 searchResults.appendChild(div)
             }
@@ -327,3 +449,11 @@ searchIcon.onclick = function () {
 
 
 document.addEventListener("DOMContentLoaded", autorun);
+
+
+function cutString(str) {
+    if (str.length > 300) {
+        return str.slice(0, 297) + "...";
+    }
+    return str;
+}
