@@ -142,8 +142,10 @@ const renderMovie = (movie, credits, director, trailerLink, relatedMovies, produ
     // }
     // div.appendChild(genres)
 
+    // ${trailerLink}?autoplay=1&mute=1
 
-    console.log(productionCompanies)
+    document.getElementById('trailPlayer').setAttribute('src', trailerLink+'?autoplay=1&mute=1');
+
     CONTAINER.innerHTML = '';
     singleMovieContainer.innerHTML = `
        <div class="col-12 single-movie-hero" style="">
@@ -256,27 +258,9 @@ const renderMovie = (movie, credits, director, trailerLink, relatedMovies, produ
     singleMovieContainer.appendChild(relatedMoviesSection)
 
 
-    let modal = document.createElement('div')
-    modal.innerHTML = `
-     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <button type="button" class="hideTrailer btn" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
-              
-              <div class="modal-body">
-                <iframe src="${trailerLink}?autoplay=1&mute=1" title="YouTube video player"
-            allow="autoplay" allowFullScreen> allow=”autoplay”</iframe>
-              </div>
-            </div>
-          </div>
-        </div>
-    `
-    document.body.appendChild(modal)
-
-
 };
+
+
 
 // Actors
 const showActors = async () => {
