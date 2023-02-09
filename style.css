@@ -32,6 +32,12 @@ a:hover {
 body[data-bs-theme="light"] :is(.nav-link, .navbar-brand){
   color: darkgrey;
 }
+.navbar {
+  gap: 40px;
+}
+.navbar-brand {
+  width: 80px;
+}
 .nav-link {
   text-align: center;
 }
