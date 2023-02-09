@@ -1,71 +1,99 @@
 /* global styling */
 :root {
-    --main-color: #FF0000;
+  --main-color: #ff0000;
 }
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    background-color: rgb(29, 29, 29);
-    color: rgb(224, 224, 224);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 #movie-backdrop {
-    width: 100%;
+  width: 100%;
 }
 
 .container {
-    /* padding-top: 32px; */
+  /* padding-top: 32px; */
 }
 
 #actors {
-    margin: 24px 16px 0 0;
+  margin: 24px 16px 0 0;
 }
 
 a {
-    transition: all 0.4s ease;
+  transition: all 0.4s ease;
 }
 
 a:hover {
-    color: var(--main-color) !important;
-
+  color: var(--main-color) !important;
 }
 
 /* start of header */
 .dropdown__menu {
-    display: none;
+  display: none;
 }
 
-
 header {
-    padding: 20px 0;
+  padding: 20px 0;
 }
 
 .form-control:focus {
-    border-color: var(--main-color);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
+  border-color: var(--main-color);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
 }
 
 input.form-control {
-    color: #FFF !important;
+  color: #fff !important;
 }
 
 div.dropdown-menu {
-    border: var(--main-color) solid 1px;
-    background-color: #ff00005e;
+  border: var(--main-color) solid 1px;
+  background-color: #ff00005e;
 }
 
 .dropdown-item {
-    color: #FFF !important;
+  color: #fff !important;
 }
 
 a.nav-link.active {
-    color: var(--main-color) !important;
+  color: var(--main-color) !important;
 }
 
-
 /* end of header */
+.checkbox {
+    opacity: 0;
+    position: absolute;
+  }
+  
+  .checkbox-label {
+    background-color: #111;
+    width: 50px;
+    height: 26px;
+    border-radius: 50px;
+    position: relative;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .fa-moon {color: #f1c40f;}
+  
+  .fa-sun {color: #f39c12;}
+  
+  .checkbox-label .ball {
+    background-color: #fff;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    transition: transform 0.2s linear;
+  }
+  
+  .checkbox:checked + .checkbox-label .ball {
+    transform: translateX(24px);
+  }
